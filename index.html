@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Odpovi.to — AI chatboti pro web a Messenger</title>
+<meta name="description" content="Pavel Tomášek — navrhuju a nasazuju AI chatboty pro rezervace a zákaznickou podporu na webu i na Messengeru, které vám šetří čas.">
+<link rel="icon" href="assets/icon-32.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-dark: #1c1917;
+    --bg-dark-soft: #262220;
+    --amber: #ca8a04;
+    --amber-light: #eab308;
+    --cream: #faf8f5;
+    --ink: #1c1917;
+    --ink-soft: #57534e;
+    --line: #e7e2db;
+    --radius-lg: 22px;
+    --radius-md: 14px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--ink);
+    background: var(--cream);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; }
+
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ---------- HEADER ---------- */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(28, 25, 23, 0.92);
+    backdrop-filter: blur(8px);
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
+  }
+
+  .brand img { width: 32px; height: 32px; border-radius: 8px; display: block; }
+
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a {
+    color: #d6d3d1;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.15s ease;
+  }
+  .nav-links a:hover { color: #fff; }
+
+  .nav-cta {
+    background: var(--amber);
+    color: #1c1917;
+    padding: 9px 18px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+  }
+  .nav-cta:hover { background: var(--amber-light); }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(202,138,4,0.18), transparent 60%),
+      var(--bg-dark);
+    color: #fff;
+    padding: 88px 0 96px;
+  }
+
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 56px;
+    align-items: center;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(202,138,4,0.14);
+    border: 1px solid rgba(202,138,4,0.4);
+    color: var(--amber-light);
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 22px;
+  }
+
+  h1 {
+    font-size: clamp(2.1rem, 4vw, 3.1rem);
+    line-height: 1.12;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 20px;
+  }
+
+  h1 .accent { color: var(--amber-light); }
+
+  .hero p.lead {
+    font-size: 1.12rem;
+    color: #d6d3d1;
+    max-width: 46ch;
+    margin: 0 0 32px;
+  }
+
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+  .btn-primary {
+    background: var(--amber);
+    color: #1c1917;
+    padding: 14px 26px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.98rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .btn-primary:hover { background: var(--amber-light); transform: translateY(-1px); }
+
+  .btn-ghost {
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    padding: 14px 24px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.98rem;
+    text-decoration: none;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.55); background: rgba(255,255,255,0.05); }
+
+  .hero-art {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-art img {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 32px;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6);
+  }
+
+  /* ---------- FEATURES ---------- */
+  .section { padding: 84px 0; }
+  .section-head { max-width: 620px; margin: 0 0 48px; }
+  .section-head .kicker {
+    color: var(--amber);
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0 0 10px;
+  }
+  .section-head h2 {
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    letter-spacing: -0.01em;
+    margin: 0 0 12px;
+  }
+  .section-head p { color: var(--ink-soft); font-size: 1.02rem; margin: 0; }
+
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .feature-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 28px 26px;
+  }
+
+  .feature-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(202,138,4,0.12);
+    color: var(--amber);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+
+  .feature-card h3 {
+    font-size: 1.08rem;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .feature-card p { color: var(--ink-soft); font-size: 0.95rem; margin: 0; }
+
+  /* ---------- ABOUT ---------- */
+  .about {
+    background: var(--bg-dark-soft);
+    color: #fff;
+  }
+  .about-inner {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 56px;
+    align-items: center;
+  }
+  .about-photo {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(circle at 30% 20%, rgba(202,138,4,0.35), transparent 55%),
+      #14110f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .about-photo img { width: 96px; height: 96px; opacity: 0.9; }
+
+  .about h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 16px; letter-spacing: -0.01em; }
+  .about p { color: #d6d3d1; font-size: 1.02rem; margin: 0 0 14px; }
+  .about .signature { color: #fff; font-weight: 600; margin-top: 22px; }
+  .about .signature span { display: block; color: #a8a29e; font-weight: 400; font-size: 0.9rem; margin-top: 2px; }
+
+  /* ---------- CONTACT ---------- */
+  .contact-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 44px;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 40px;
+    align-items: center;
+  }
+  .contact-card h2 { margin: 0 0 12px; font-size: clamp(1.5rem, 3vw, 1.9rem); letter-spacing: -0.01em; }
+  .contact-card p { color: var(--ink-soft); margin: 0; }
+
+  .contact-links { display: flex; flex-direction: column; gap: 14px; }
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: var(--ink);
+    font-weight: 600;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .contact-link:hover { border-color: var(--amber); background: #fffaf0; }
+  .contact-link .ico {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: rgba(202,138,4,0.12);
+    color: var(--amber);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .contact-link small { display: block; color: var(--ink-soft); font-weight: 400; font-size: 0.82rem; }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    background: var(--bg-dark);
+    color: #a8a29e;
+    padding: 32px 0;
+    font-size: 0.88rem;
+  }
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-inner .brand { font-size: 0.95rem; }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 860px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-art { order: -1; }
+    .hero-art img { max-width: 180px; }
+    .features { grid-template-columns: 1fr; }
+    .about-inner { grid-template-columns: 1fr; }
+    .about-photo { max-width: 200px; margin: 0 auto; }
+    .contact-card { grid-template-columns: 1fr; padding: 30px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top">
+      <img src="assets/icon-192.png" alt="Odpovi.to">
+      Odpovi.to
+    </a>
+    <nav class="nav-links">
+      <a href="#sluzby">Co dělám</a>
+      <a href="#o-mne">O mně</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
+    <a class="nav-cta" href="mailto:tomikus.p@gmail.com">Napsat</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <div>
+        <span class="eyebrow">AI chatboti na míru</span>
+        <h1>Zákazníci si napíšou.<br>Bot to <span class="accent">vyřídí</span>.<br>Vy máte čas na práci.</h1>
+        <p class="lead">
+          Navrhuju a nasazuju AI chatboty pro rezervace a zákaznickou podporu —
+          na webu i na Facebook Messengeru. Odpovídají za vás 24 hodin denně,
+          a když je potřeba, klidně slovo předají vám.
+        </p>
+        <div class="hero-actions">
+          <a class="btn-primary" href="mailto:tomikus.p@gmail.com">Domluvit konzultaci →</a>
+          <a class="btn-ghost" href="#sluzby">Co přesně dělám</a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <img src="assets/icon-512.png" alt="Odpovi.to — logo">
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section" id="sluzby">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Co dělám</p>
+        <h2>Chatbot, který doopravdy pracuje</h2>
+        <p>Ne generický skript s pár předpřipravenými odpověďmi — bota, který rozumí kontextu, umí založit i zrušit rezervaci a ví, kdy má předat slovo člověku.</p>
+      </div>
+      <div class="features">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+          </div>
+          <h3>Rezervace bez telefonování</h3>
+          <p>Zákazník si termín domluví přímo v chatu — bot ověří volno v kalendáři a rezervaci rovnou založí, bez vašeho zásahu.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <h3>Odpovídá ve dne v noci</h3>
+          <p>Otevírací dobu, ceník i časté dotazy vyřídí i mimo pracovní dobu — zákazník nečeká do rána na odpověď.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h3>Web i Messenger, jeden mozek</h3>
+          <p>Stejný bot běží na vašem webu i na Facebook Messengeru — se stejnou znalostní bází, bez duplicitní práce navíc.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section about" id="o-mne">
+    <div class="wrap about-inner">
+      <div class="about-photo">
+        <img src="assets/icon-192.png" alt="">
+      </div>
+      <div>
+        <h2>Kdo za tím stojí</h2>
+        <p>
+          Jsem <strong>Pavel Tomášek</strong>, pracuju jako OSVČ a stavím AI asistenty
+          na míru malým a středním podnikům — od kadeřnictví po restaurace.
+        </p>
+        <p>
+          Cíl je jednoduchý: aby majitelé netrávili hodiny odpovídáním na ty samé
+          dotazy pořád dokola, a zákazníci dostali odpověď hned, klidně o půlnoci.
+        </p>
+        <p class="signature">
+          Pavel Tomášek
+          <span>Odpovi.to · AI chatboti pro rezervace a podporu</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section" id="kontakt">
+    <div class="wrap">
+      <div class="contact-card">
+        <div>
+          <h2>Pojďme si promluvit</h2>
+          <p>Napište nebo zavolejte — probereme, jestli by vám chatbot ušetřil čas, a jak by mohl vypadat.</p>
+        </div>
+        <div class="contact-links">
+          <a class="contact-link" href="mailto:tomikus.p@gmail.com">
+            <span class="ico">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+            </span>
+            <span>tomikus.p@gmail.com<small>E-mail</small></span>
+          </a>
+          <a class="contact-link" href="tel:+420604779519">
+            <span class="ico">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </span>
+            <span>+420 604 779 519<small>Telefon</small></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <span class="brand">Odpovi.to</span>
+    <span>&copy; 2026 Pavel Tomášek. Všechna práva vyhrazena.</span>
+  </div>
+</footer>
+
+</body>
+</html>
