@@ -285,12 +285,9 @@
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 16px 18px;
+    padding: 12px 12px 12px 18px;
     border: 1px solid var(--line);
     border-radius: var(--radius-md);
-    text-decoration: none;
-    color: var(--ink);
-    font-weight: 600;
     transition: border-color 0.15s ease, background 0.15s ease;
   }
   .contact-link:hover { border-color: var(--amber); background: #fffaf0; }
@@ -302,7 +299,34 @@
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
+  .contact-link a.value {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .contact-link a.value:hover { text-decoration: underline; }
   .contact-link small { display: block; color: var(--ink-soft); font-weight: 400; font-size: 0.82rem; }
+  .contact-link .text { flex: 1; min-width: 0; }
+
+  .copy-btn {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 9px 13px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+  }
+  .copy-btn:hover { border-color: var(--amber); color: var(--amber); }
+  .copy-btn.copied { border-color: var(--amber); background: var(--amber); color: #fff; }
+  .copy-btn svg { flex-shrink: 0; }
 
   /* ---------- FOOTER ---------- */
   footer {
@@ -346,7 +370,7 @@
       <a href="#o-mne">O mně</a>
       <a href="#kontakt">Kontakt</a>
     </nav>
-    <a class="nav-cta" href="mailto:tomikus.p@gmail.com">Napsat</a>
+    <a class="nav-cta" href="#kontakt">Napsat</a>
   </div>
 </header>
 
@@ -364,7 +388,7 @@
           a když je potřeba, klidně slovo předají vám.
         </p>
         <div class="hero-actions">
-          <a class="btn-primary" href="mailto:tomikus.p@gmail.com">Domluvit konzultaci →</a>
+          <a class="btn-primary" href="#kontakt">Domluvit konzultaci →</a>
           <a class="btn-ghost" href="#sluzby">Co přesně dělám</a>
         </div>
       </div>
@@ -441,18 +465,32 @@
           <p>Napište nebo zavolejte — probereme, jestli by vám chatbot ušetřil čas, a jak by mohl vypadat.</p>
         </div>
         <div class="contact-links">
-          <a class="contact-link" href="mailto:tomikus.p@gmail.com">
+          <div class="contact-link">
             <span class="ico">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
             </span>
-            <span>tomikus.p@gmail.com<small>E-mail</small></span>
-          </a>
-          <a class="contact-link" href="tel:+420604779519">
+            <span class="text">
+              <a class="value" href="mailto:tomikus.p@gmail.com">tomikus.p@gmail.com</a>
+              <small>E-mail</small>
+            </span>
+            <button class="copy-btn" data-copy="tomikus.p@gmail.com" type="button">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span class="copy-btn-label">Kopírovat</span>
+            </button>
+          </div>
+          <div class="contact-link">
             <span class="ico">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             </span>
-            <span>+420 604 779 519<small>Telefon</small></span>
-          </a>
+            <span class="text">
+              <a class="value" href="tel:+420604779519">+420 604 779 519</a>
+              <small>Telefon</small>
+            </span>
+            <button class="copy-btn" data-copy="+420 604 779 519" type="button">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span class="copy-btn-label">Kopírovat</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -467,5 +505,52 @@
   </div>
 </footer>
 
+<script>
+  // Tlačítko "Kopírovat" u e-mailu/telefonu — funguje bez ohledu na to,
+  // jestli má návštěvník na počítači nastavený výchozí e-mailový program
+  // (mailto:/tel: odkazy bez toho tiše nic neudělají).
+  document.querySelectorAll(".copy-btn").forEach(function (btn) {
+    var label = btn.querySelector(".copy-btn-label");
+    var defaultLabel = label.textContent;
+
+    btn.addEventListener("click", function () {
+      var text = btn.getAttribute("data-copy");
+
+      function showCopied() {
+        btn.classList.add("copied");
+        label.textContent = "Zkopírováno!";
+        setTimeout(function () {
+          btn.classList.remove("copied");
+          label.textContent = defaultLabel;
+        }, 1800);
+      }
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(showCopied).catch(function () {
+          fallbackCopy(text, showCopied);
+        });
+      } else {
+        fallbackCopy(text, showCopied);
+      }
+    });
+  });
+
+  function fallbackCopy(text, onDone) {
+    var input = document.createElement("textarea");
+    input.value = text;
+    input.style.position = "fixed";
+    input.style.opacity = "0";
+    document.body.appendChild(input);
+    input.focus();
+    input.select();
+    try {
+      document.execCommand("copy");
+    } catch (err) {
+      /* nic - v nejhorším případě se aspoň adresa dá vidět a opsat ručně */
+    }
+    document.body.removeChild(input);
+    onDone();
+  }
+</script>
 </body>
 </html>
