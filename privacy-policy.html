@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zásady ochrany osobních údajů</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+    line-height: 1.6;
+    color: #222;
+    background: #fff;
+  }
+  h1 {
+    font-size: 28px;
+    margin-bottom: 4px;
+  }
+  .updated {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 32px;
+  }
+  h2 {
+    font-size: 19px;
+    margin-top: 36px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 6px;
+  }
+  p, li {
+    font-size: 16px;
+  }
+  ul {
+    padding-left: 22px;
+  }
+  a {
+    color: #1a56db;
+  }
+  .contact-box {
+    background: #f7f7f8;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-top: 12px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Zásady ochrany osobních údajů</h1>
+<p class="updated">Poslední aktualizace: 22. 9. 2026</p>
+
+<p>Tyto zásady popisují, jak nakládáme s osobními údaji v souvislosti s chatbotem (dále jen „appka“), který komunikuje s uživateli prostřednictvím Facebook Messenger a webového chatového widgetu.</p>
+
+<h2>1. Provozovatel</h2>
+<p>Provozovatelem appky je Pavel Tomášek.</p>
+<div class="contact-box">
+  Kontaktní e-mail: <a href="mailto:tomikus.p@gmail.com">tomikus.p@gmail.com</a><br>
+  Pro jakékoliv dotazy týkající se ochrany osobních údajů, nebo pro žádost o smazání dat, nás kontaktujte na výše uvedeném e-mailu.
+</div>
+
+<h2>2. Jaké údaje appka zpracovává</h2>
+
+<p><strong>a) Obsah konverzace (zprávy)</strong><br>
+Appka zpracovává obsah zpráv, které jí uživatel napíše, aby na ně mohla automaticky odpovědět. Zprávy appka neukládá trvale:</p>
+<ul>
+  <li>U webového chatového widgetu appka historii konverzace vůbec neukládá na serveru – historii si drží prohlížeč uživatele a při každém požadavku ji posílá appce jen pro vygenerování aktuální odpovědi.</li>
+  <li>U Facebook Messenger appka drží krátkou historii konverzace dočasně v operační paměti serveru (RAM), aby si bot pamatoval kontext v rámci probíhající konverzace. Tato data se automaticky a nevratně vymažou při každém restartu nebo redeployi serveru a nejsou ukládána do žádné databáze.</li>
+</ul>
+
+<p><strong>b) Základní identifikace z Facebooku</strong><br>
+Pokud uživatel komunikuje s appkou přes Messenger, appka získává od Facebooku základní identifikátor uživatele (Messenger user ID) a případně jméno, nutné k tomu, aby appka věděla, komu odpovídá a mohla si udržet kontext konverzace po dobu jejího trvání.</p>
+
+<p><strong>c) Údaje o rezervaci</strong><br>
+Pokud si uživatel prostřednictvím appky vytvoří rezervaci, appka trvale uloží do databáze: jméno, telefonní číslo a/nebo e-mail, datum, čas a objednanou službu. Tyto údaje appka uchovává, dokud je uživatel, admin nebo provozovatel nesmaže.</p>
+
+<p><strong>d) Notifikace pro provozovatele</strong><br>
+Pokud appka vyhodnotí, že konverzaci je třeba předat živému operátorovi (např. uživatel o to požádá), appka uloží krátkou notifikaci pro provozovatele obsahující začátek zprávy uživatele (max. cca 120 znaků). Tato notifikace se automaticky maže po předem nastaveném počtu dní.</p>
+
+<h2>3. Účel zpracování</h2>
+<p>Údaje appka zpracovává výhradně za účelem:</p>
+<ul>
+  <li>zodpovězení dotazu uživatele v rámci konverzace,</li>
+  <li>vytvoření a správy rezervace, o kterou uživatel požádá,</li>
+  <li>předání konverzace živému operátorovi na žádost uživatele,</li>
+  <li>upozornění provozovatele appky na konverzace vyžadující lidský zásah.</li>
+</ul>
+<p>Appka nepoužívá údaje uživatelů k reklamě, marketingu třetích stran ani k jinému účelu, než je uvedeno výše.</p>
+
+<h2>4. Sdílení údajů s třetími stranami</h2>
+<p>Údaje neprodáváme ani je nesdílíme s třetími stranami pro marketingové účely. Údaje mohou být zpracovány poskytovatelem hostingu appky (Render) a platformou Meta (Facebook Messenger) v rozsahu nutném pro technické fungování appky – tito poskytovatelé mají vlastní zásady ochrany osobních údajů.</p>
+
+<h2>5. Doba uchování údajů</h2>
+<ul>
+  <li>Obsah zpráv: neukládá se trvale (viz bod 2a).</li>
+  <li>Rezervace: uchovávány trvale, dokud nejsou smazány.</li>
+  <li>Notifikace pro provozovatele: automaticky smazány po nastaveném počtu dní.</li>
+</ul>
+
+<h2>6. Práva uživatele</h2>
+<p>Uživatel má právo požádat o:</p>
+<ul>
+  <li>informaci, jaké údaje o něm appka zpracovává,</li>
+  <li>opravu nebo výmaz svých údajů (zejména údajů o rezervaci),</li>
+  <li>omezení zpracování údajů.</li>
+</ul>
+<p>Žádost lze zaslat e-mailem na <a href="mailto:tomikus.p@gmail.com">tomikus.p@gmail.com</a>. Na žádost odpovíme nejpozději do 30 dnů.</p>
+
+<h2>7. Kontakt</h2>
+<p>
+  Pavel Tomášek<br>
+  E-mail: <a href="mailto:tomikus.p@gmail.com">tomikus.p@gmail.com</a>
+</p>
+
+</body>
+</html>
