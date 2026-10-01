@@ -1,10 +1,17 @@
 <!DOCTYPE html>
+<!--
+  PŘED ZVEŘEJNĚNÍM doplňte žlutě označená místa (<mark class="todo">): IČO, adresu sídla,
+  datum účinnosti, způsob uložení tokenů a právní základ předání dat do USA (Groq).
+  Pak nechte text zkontrolovat (nejde o právní poradenství) a tenhle komentář smažte.
+  Adresu {PUBLIC_BASE_URL}/privacy.html zadejte do Meta App Dashboardu
+  (Settings → Basic → Privacy Policy URL).
+-->
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Privacy Policy · Odpovi.to</title>
-<meta name="description" content="Privacy Policy služby Odpovi.to – AI chatbota pro rezervace a zákaznickou podporu.">
+<title>Ochrana osobních údajů · Odpovi.to</title>
+<meta name="description" content="Zásady ochrany osobních údajů služby Odpovi.to – AI chatbota pro rezervace a zákaznickou podporu.">
 <meta name="theme-color" content="#0f0d0b">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/icon-32.png" type="image/png" sizes="32x32">
@@ -155,12 +162,12 @@
 <div class="doc-hero">
   <div class="wrap">
     <div class="crumbs"><a href="index.html">Odpovi.to</a><span>/</span><span>Právní dokumenty</span></div>
-    <h1>Privacy Policy</h1>
-    <p class="intro">Tyto zásady popisují, jak nakládáme s osobními údaji v souvislosti s chatbotem (dále jen „appka“), který komunikuje s uživateli prostřednictvím Facebook Messenger a webového chatového widgetu.</p>
-    <div class="doc-meta"><span>Poslední aktualizace: <b>22. 9. 2026</b></span><span>Provozovatel: <b>Pavel Tomášek</b></span><span>Kontakt: <b>tomikus.p@gmail.com</b></span></div>
+    <h1>Zásady ochrany osobních údajů</h1>
+    <p class="intro">Jak služba Odpovi.to zpracovává údaje zákazníků, kteří píší do chatu na webu nebo na Messengeru, a údaje firem, které si službu propojí s Facebookem.</p>
+    <div class="doc-meta"><span>Platné od: <b><mark class="todo">DD. MM. RRRR</mark></b></span><span>Provozovatel: <b>Pavel Tomášek</b></span><span>Kontakt: <b>tomikus.p@gmail.com</b></span></div>
     <nav class="tabs" aria-label="Právní dokumenty">
-      <a href="privacy.html">Ochrana osobních údajů</a>
-      <a href="privacy-policy.html" aria-current="page">Privacy Policy</a>
+      <a href="privacy.html" aria-current="page">Ochrana osobních údajů</a>
+      <a href="privacy-policy.html">Privacy Policy</a>
     </nav>
   </div>
 </div>
@@ -170,13 +177,13 @@
     <nav aria-label="Obsah dokumentu">
       <h2>Obsah</h2>
       <ol>
-        <li><a href="#provozovatel">Provozovatel</a></li>
-        <li><a href="#udaje">Jaké údaje appka zpracovává</a></li>
-        <li><a href="#ucel">Účel zpracování</a></li>
-        <li><a href="#sdileni">Sdílení údajů s třetími stranami</a></li>
-        <li><a href="#uchovani">Doba uchování údajů</a></li>
-        <li><a href="#prava">Práva uživatele</a></li>
-        <li><a href="#kontakt">Kontakt</a></li>
+        <li><a href="#kdo-jsme">Kdo jsme</a></li>
+        <li><a href="#zakaznici">Zákazníci klientů (chat na webu a na Messengeru)</a></li>
+        <li><a href="#facebook">Zástupci klientů přihlášení přes Facebook</a></li>
+        <li><a href="#prijemci">Komu údaje předáváme</a></li>
+        <li><a href="#smazani">Vaše práva a smazání údajů</a></li>
+        <li><a href="#zabezpeceni">Zabezpečení</a></li>
+        <li><a href="#zmeny">Změny těchto zásad</a></li>
       </ol>
     </nav>
     <div class="help">
@@ -186,84 +193,122 @@
   </aside>
 
   <article class="doc">
-    <section id="provozovatel">
-      <h2><span class="n">01</span>Provozovatel</h2>
-      <p>Provozovatelem appky je Pavel Tomášek.</p>
-      <div class="contact-box">
-        <p class="who">Kontaktní e-mail: <a href="mailto:tomikus.p@gmail.com">tomikus.p@gmail.com</a></p>
-        <p>Pro jakékoliv dotazy týkající se ochrany osobních údajů, nebo pro žádost o smazání dat, nás kontaktujte na výše uvedeném e-mailu.</p>
-      </div>
+    <section id="kdo-jsme">
+      <h2><span class="n">01</span>Kdo jsme</h2>
+      <p>
+        Službu Odpovi.to (dále „služba“) provozuje <strong>Pavel Tomášek</strong>, OSVČ,
+        IČO <mark class="todo">IČO</mark>, se sídlem <mark class="todo">adresa sídla</mark> (dále „provozovatel“).
+        Kontakt pro otázky k osobním údajům: <a href="mailto:tomikus.p@gmail.com">tomikus.p@gmail.com</a>.
+      </p>
+      <p>
+        Služba je automatický asistent (chatbot), který za firmy (dále „klienti“) odpovídá na dotazy jejich zákazníků
+        na webu klienta a na Facebook Messengeru a umí založit nebo zrušit rezervaci. Klient je ve vztahu ke svým zákazníkům
+        správcem osobních údajů, provozovatel pro něj údaje zpracovává jako zpracovatel. Údaje o zástupcích klientů,
+        kteří se ke službě přihlašují přes Facebook (kapitola 3), zpracovává provozovatel jako správce.
+      </p>
     </section>
 
-    <section id="udaje">
-      <h2><span class="n">02</span>Jaké údaje appka zpracovává</h2>
-      <h3>a) Obsah konverzace (zprávy)</h3>
-      <p>Appka zpracovává obsah zpráv, které jí uživatel napíše, aby na ně mohla automaticky odpovědět. Zprávy appka neukládá trvale:</p>
-      <ul>
-        <li>U webového chatového widgetu appka historii konverzace vůbec neukládá na serveru. Historii si drží prohlížeč uživatele a při každém požadavku ji posílá appce jen pro vygenerování aktuální odpovědi.</li>
-        <li>U Facebook Messenger appka drží krátkou historii konverzace dočasně v operační paměti serveru (RAM), aby si bot pamatoval kontext v rámci probíhající konverzace. Tato data se automaticky a nevratně vymažou při každém restartu nebo redeployi serveru a nejsou ukládána do žádné databáze.</li>
-      </ul>
-      <h3>b) Základní identifikace z Facebooku</h3>
-      <p>Pokud uživatel komunikuje s appkou přes Messenger, appka získává od Facebooku základní identifikátor uživatele (Messenger user ID) a případně jméno, nutné k tomu, aby appka věděla, komu odpovídá a mohla si udržet kontext konverzace po dobu jejího trvání.</p>
-      <h3>c) Údaje o rezervaci</h3>
-      <p>Pokud si uživatel prostřednictvím appky vytvoří rezervaci, appka trvale uloží do databáze: jméno, telefonní číslo a/nebo e-mail, datum, čas a objednanou službu. Tyto údaje appka uchovává, dokud je uživatel, admin nebo provozovatel nesmaže.</p>
-      <h3>d) Notifikace pro provozovatele</h3>
-      <p>Pokud appka vyhodnotí, že konverzaci je třeba předat živému operátorovi (např. uživatel o to požádá), appka uloží krátkou notifikaci pro provozovatele obsahující začátek zprávy uživatele (max. cca 120 znaků). Tato notifikace se automaticky maže po předem nastaveném počtu dní.</p>
-    </section>
-
-    <section id="ucel">
-      <h2><span class="n">03</span>Účel zpracování</h2>
-      <p>Údaje appka zpracovává výhradně za účelem:</p>
-      <ul>
-        <li>zodpovězení dotazu uživatele v rámci konverzace,</li>
-        <li>vytvoření a správy rezervace, o kterou uživatel požádá,</li>
-        <li>předání konverzace živému operátorovi na žádost uživatele,</li>
-        <li>upozornění provozovatele appky na konverzace vyžadující lidský zásah.</li>
-      </ul>
-      <p>Appka nepoužívá údaje uživatelů k reklamě, marketingu třetích stran ani k jinému účelu, než je uvedeno výše.</p>
-    </section>
-
-    <section id="sdileni">
-      <h2><span class="n">04</span>Sdílení údajů s třetími stranami</h2>
-      <p>Údaje neprodáváme ani je nesdílíme s třetími stranami pro marketingové účely. Údaje mohou být zpracovány poskytovatelem hostingu appky (Render) a platformou Meta (Facebook Messenger) v rozsahu nutném pro technické fungování appky. Tito poskytovatelé mají vlastní zásady ochrany osobních údajů.</p>
-    </section>
-
-    <section id="uchovani">
-      <h2><span class="n">05</span>Doba uchování údajů</h2>
+    <section id="zakaznici">
+      <h2><span class="n">02</span>Zákazníci klientů (chat na webu a na Messengeru)</h2>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Údaje</th><th>Doba uchování</th></tr></thead>
+          <thead><tr><th>Údaje</th><th>Účel</th><th>Jak dlouho</th></tr></thead>
           <tbody>
-            <tr><td>Obsah zpráv</td><td>Neukládá se trvale (viz bod 2a).</td></tr>
-            <tr><td>Rezervace</td><td>Uchovávány trvale, dokud nejsou smazány.</td></tr>
-            <tr><td>Notifikace pro provozovatele</td><td>Automaticky smazány po nastaveném počtu dní.</td></tr>
+            <tr>
+              <td>Text zpráv, které do chatu napíšete; u Messengeru navíc identifikátor konverzace přidělený Facebookem (PSID)</td>
+              <td>Odpovědět na váš dotaz</td>
+              <td>Historii posledních zpráv Messengeru držíme jen v paměti serveru (max. 40 zpráv na konverzaci) a po restartu serveru zmizí. Chat na webu si historii drží ve vašem prohlížeči.</td>
+            </tr>
+            <tr>
+              <td>Jméno, telefon nebo e-mail, datum, čas a druh služby (při rezervaci nebo zrušení rezervace)</td>
+              <td>Založit, ověřit a případně zrušit vaši rezervaci; informovat klienta</td>
+              <td>Dokud je nesmaže zákazník, klient nebo provozovatel.</td>
+            </tr>
+            <tr>
+              <td>Telefon nebo e-mail, který uvedete při žádosti o předání živému člověku</td>
+              <td>Aby se vám klient mohl ozvat</td>
+              <td>Zobrazí se v upozornění klientovi; upozornění se automaticky mažou po nastaveném počtu dní.</td>
+            </tr>
           </tbody>
         </table>
       </div>
-    </section>
-
-    <section id="prava">
-      <h2><span class="n">06</span>Práva uživatele</h2>
-      <p>Uživatel má právo požádat o:</p>
-      <ul>
-        <li>informaci, jaké údaje o něm appka zpracovává,</li>
-        <li>opravu nebo výmaz svých údajů (zejména údajů o rezervaci),</li>
-        <li>omezení zpracování údajů.</li>
-      </ul>
-      <p>Žádost lze zaslat e-mailem na <a href="mailto:tomikus.p@gmail.com">tomikus.p@gmail.com</a>. Na žádost odpovíme nejpozději do 30 dnů.</p>
-    </section>
-
-    <section id="kontakt">
-      <h2><span class="n">07</span>Kontakt</h2>
-      <div class="contact-box">
-        <p class="who">Pavel Tomášek</p>
-        <p>E-mail: <a href="mailto:tomikus.p@gmail.com">tomikus.p@gmail.com</a></p>
+      <div class="callout">
+        <span class="ci"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+        <p>
+          Bot vždy sdělí, že jde o automatického asistenta, a kdykoli na požádání („chci mluvit s člověkem“) předá konverzaci
+          živému člověku. Jednotlivé zprávy zpracovává umělá inteligence; žádné rozhodnutí s právními účinky pro vás
+          se na jejím základě automaticky nepřijímá. Rezervaci vždy potvrzujete vy.
+        </p>
       </div>
+    </section>
+
+    <section id="facebook">
+      <h2><span class="n">03</span>Zástupci klientů přihlášení přes Facebook</h2>
+      <p>
+        Když zástupce klienta v administraci propojí Facebook stránku, požádáme Facebook o tato oprávnění:
+        <em>pages_show_list</em> (seznam stránek, které spravujete), <em>pages_messaging</em> (čtení a odesílání zpráv
+        stránky) a <em>pages_manage_metadata</em> (přihlášení stránky k odběru zpráv). Ukládáme:
+      </p>
+      <ul>
+        <li>identifikátor vašeho účtu ve službě (ID uživatele pro naši aplikaci) a vaše jméno,</li>
+        <li>identifikátor a název propojené stránky,</li>
+        <li>přístupový token stránky (uložený <mark class="todo">šifrovaně</mark>), jen abychom mohli odpovídat na zprávy této stránky.</li>
+      </ul>
+      <p>
+        Nezískáváme a neukládáme vaše soukromé příspěvky, seznam přátel ani e-mail z vašeho osobního profilu,
+        ani zprávy jiných stránek, než které propojíte. Údaje používáme výhradně k provozu služby a nikdy je
+        neprodáváme ani nesdílíme za účelem reklamy. <strong>Právní základ:</strong> plnění smlouvy o poskytování služby.
+        Údaje uchováváme, dokud je propojení aktivní.
+      </p>
+    </section>
+
+    <section id="prijemci">
+      <h2><span class="n">04</span>Komu údaje předáváme</h2>
+      <ul>
+        <li><strong>Meta Platforms Ireland Ltd.</strong>: provozovatel Facebooku a Messengeru (doručování zpráv).</li>
+        <li><strong>Groq, Inc. (USA)</strong>: zpracování textu zpráv umělou inteligencí za účelem sestavení odpovědi. Předání do USA probíhá <mark class="todo">na základě standardních smluvních doložek / rozhodnutí o odpovídající ochraně – ověřte a doplňte</mark>.</li>
+        <li><strong>Render Services, Inc.</strong>: poskytovatel hostingu, provoz serveru.</li>
+        <li><strong>Poskytovatelé webových push oznámení</strong> (Google, Apple, Mozilla): doručení upozornění klientovi na jeho zařízení.</li>
+        <li><strong>Příslušný klient</strong> (firma, které se ptáte nebo u které rezervujete): má přístup k rezervacím a upozorněním.</li>
+      </ul>
+    </section>
+
+    <section id="smazani">
+      <h2><span class="n">05</span>Vaše práva a smazání údajů</h2>
+      <p>
+        Máte právo na přístup k údajům, opravu, výmaz, omezení zpracování, přenositelnost a vznést námitku; máte také
+        právo podat stížnost u Úřadu pro ochranu osobních údajů (<a href="https://uoou.gov.cz" rel="noopener">uoou.gov.cz</a>).
+      </p>
+      <h3>Jak si nechat smazat údaje o propojení s Facebookem</h3>
+      <ol class="steps-del">
+        <li>V administraci klepněte na <em>Facebook → Odpojit</em>. Token, ID stránky a vaše jméno se smažou okamžitě.</li>
+        <li>Nebo na Facebooku otevřete <em>Nastavení → Firemní integrace</em>, u aplikace Odpovi.to zvolte <em>Odebrat</em> a zaškrtněte smazání údajů.
+          Facebook nám o tom pošle žádost a propojení automaticky smažeme. Stav žádosti uvidíte na odkazu, který vám Facebook zobrazí.</li>
+        <li>Nebo napište na <a href="mailto:tomikus.p@gmail.com">tomikus.p@gmail.com</a>. Vyřídíme do 30 dnů.</li>
+      </ol>
+      <p>
+        Údaje zákazníků (rezervace, kontakty) smažeme na žádost zákazníka nebo klienta; napište na <a href="mailto:tomikus.p@gmail.com">tomikus.p@gmail.com</a>
+        nebo přímo klientovi, u kterého jste rezervaci učinili.
+      </p>
+    </section>
+
+    <section id="zabezpeceni">
+      <h2><span class="n">06</span>Zabezpečení</h2>
+      <p>
+        Komunikace probíhá přes HTTPS, požadavky od Facebooku ověřujeme podpisem, přístup do administrace je chráněn
+        heslem a tokeny stránek jsou <mark class="todo">šifrovaně uložené</mark>. Přesto nelze zaručit absolutní bezpečnost;
+        o případném úniku osobních údajů budeme informovat podle zákona.
+      </p>
+    </section>
+
+    <section id="zmeny">
+      <h2><span class="n">07</span>Změny těchto zásad</h2>
+      <p>Aktuální znění je vždy na této stránce. O podstatných změnách informujeme klienty v administraci.</p>
     </section>
 
     <div class="related">
       <span>Související dokument</span>
-      <a href="privacy.html">Zásady ochrany osobních údajů <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a href="privacy-policy.html">Privacy Policy <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
   </article>
 </main>

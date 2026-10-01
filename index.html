@@ -2,556 +2,1049 @@
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Odpovi.to — AI chatboti pro web a Messenger</title>
-<meta name="description" content="Pavel Tomášek — navrhuju a nasazuju AI chatboty pro rezervace a zákaznickou podporu na webu i na Messengeru, které vám šetří čas.">
-<link rel="icon" href="assets/icon-32.png" type="image/png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Odpovi.to</title>
+<meta name="description" content="AI asistent pro rezervace a zákaznickou podporu na webu i na Facebook Messengeru. Odpovídá 24/7, zakládá rezervace a ví, kdy předat slovo člověku.">
+<meta name="theme-color" content="#0f0d0b">
+<meta property="og:title" content="Odpovi.to · AI asistent pro rezervace a podporu">
+<meta property="og:description" content="Zákazník napíše. Bot to vyřídí. Na webu i na Messengeru, 24 hodin denně.">
+<meta property="og:image" content="assets/icon-512.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/icon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="assets/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg-dark: #1c1917;
-    --bg-dark-soft: #262220;
+    color-scheme: dark;
+    --bg: #0f0d0b;
+    --bg-2: #151210;
+    --surface: #1c1917;
+    --surface-2: #24201d;
+    --line: rgba(245, 238, 228, 0.08);
+    --line-2: rgba(245, 238, 228, 0.15);
+    --text: #f5f2ed;
+    --muted: #a8a29e;
+    --dim: #78716c;
     --amber: #ca8a04;
-    --amber-light: #eab308;
+    --amber-hi: #eab308;
+    --amber-soft: rgba(202, 138, 4, 0.14);
     --cream: #faf8f5;
+    --cream-2: #f1ede6;
     --ink: #1c1917;
     --ink-soft: #57534e;
-    --line: #e7e2db;
-    --radius-lg: 22px;
-    --radius-md: 14px;
+    --ink-line: #e4ded5;
+    --ok: #4ade80;
+    --sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --r-xl: 24px;
+    --r-lg: 18px;
+    --r-md: 12px;
+    --wrap: 1180px;
+    --header-h: 68px;
   }
 
-  * { box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
-
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   body {
     margin: 0;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    color: var(--ink);
-    background: var(--cream);
-    line-height: 1.55;
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--bg);
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
-
+  img, svg { max-width: 100%; }
   a { color: inherit; }
+  h1, h2, h3 { text-wrap: balance; margin: 0; }
+  p { margin: 0; }
+  :focus-visible { outline: 2px solid var(--amber-hi); outline-offset: 3px; border-radius: 6px; }
+  section[id] { scroll-margin-top: calc(var(--header-h) + 12px); }
 
-  .wrap {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 0 24px;
+  .wrap { max-width: var(--wrap); margin: 0 auto; padding-inline: 24px; }
+  .mono { font-family: var(--mono); }
+  .skip {
+    position: absolute; left: 16px; top: -60px; z-index: 100;
+    background: var(--amber); color: var(--ink); padding: 10px 16px; border-radius: 10px;
+    font-weight: 600; text-decoration: none;
   }
+  .skip:focus { top: 12px; }
 
-  /* ---------- HEADER ---------- */
-  header {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background: rgba(28, 25, 23, 0.92);
-    backdrop-filter: blur(8px);
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    height: 48px; padding: 0 22px; border-radius: 999px;
+    font: 600 0.95rem/1 var(--sans); text-decoration: none; white-space: nowrap;
+    transition: background .18s ease, border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+    cursor: pointer; border: 0;
   }
-
-  .nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 0;
-  }
-
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: #fff;
-    font-weight: 700;
-    font-size: 1.15rem;
-    letter-spacing: -0.01em;
-  }
-
-  .brand img { width: 32px; height: 32px; border-radius: 8px; display: block; }
-
-  .nav-links { display: flex; gap: 28px; }
-  .nav-links a {
-    color: #d6d3d1;
-    text-decoration: none;
-    font-size: 0.95rem;
-    font-weight: 500;
-    transition: color 0.15s ease;
-  }
-  .nav-links a:hover { color: #fff; }
-
-  .nav-cta {
-    background: var(--amber);
-    color: #1c1917;
-    padding: 9px 18px;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    text-decoration: none;
-    white-space: nowrap;
-    transition: background 0.15s ease;
-  }
-  .nav-cta:hover { background: var(--amber-light); }
-
-  /* ---------- HERO ---------- */
-  .hero {
-    background:
-      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(202,138,4,0.18), transparent 60%),
-      var(--bg-dark);
-    color: #fff;
-    padding: 88px 0 96px;
-  }
-
-  .hero-inner {
-    display: grid;
-    grid-template-columns: 1.15fr 0.85fr;
-    gap: 56px;
-    align-items: center;
-  }
-
-  .eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(202,138,4,0.14);
-    border: 1px solid rgba(202,138,4,0.4);
-    color: var(--amber-light);
-    font-size: 0.82rem;
-    font-weight: 600;
-    padding: 6px 14px;
-    border-radius: 999px;
-    margin-bottom: 22px;
-  }
-
-  h1 {
-    font-size: clamp(2.1rem, 4vw, 3.1rem);
-    line-height: 1.12;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    margin: 0 0 20px;
-  }
-
-  h1 .accent { color: var(--amber-light); }
-
-  .hero p.lead {
-    font-size: 1.12rem;
-    color: #d6d3d1;
-    max-width: 46ch;
-    margin: 0 0 32px;
-  }
-
-  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
-
   .btn-primary {
-    background: var(--amber);
-    color: #1c1917;
-    padding: 14px 26px;
-    border-radius: 999px;
-    font-weight: 700;
-    font-size: 0.98rem;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: transform 0.15s ease, background 0.15s ease;
+    background: var(--amber); color: var(--ink);
+    box-shadow: 0 0 0 1px rgba(234,179,8,.35) inset, 0 10px 30px -10px rgba(202,138,4,.6);
   }
-  .btn-primary:hover { background: var(--amber-light); transform: translateY(-1px); }
+  .btn-primary:hover { background: var(--amber-hi); transform: translateY(-1px); }
+  .btn-primary svg { transition: transform .18s ease; }
+  .btn-primary:hover svg { transform: translateX(3px); }
+  .btn-ghost { color: var(--text); border: 1px solid var(--line-2); background: rgba(255,255,255,.02); }
+  .btn-ghost:hover { border-color: rgba(245,238,228,.35); background: rgba(255,255,255,.05); }
+  .btn-sm { height: 38px; padding: 0 16px; font-size: .88rem; }
 
-  .btn-ghost {
-    border: 1px solid rgba(255,255,255,0.25);
-    color: #fff;
-    padding: 14px 24px;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 0.98rem;
-    text-decoration: none;
-    transition: border-color 0.15s ease, background 0.15s ease;
+  /* ---------- Header ---------- */
+  .site-header {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50;
+    background: rgba(15, 13, 11, 0.72);
+    backdrop-filter: saturate(160%) blur(14px);
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+    border-bottom: 1px solid var(--line);
   }
-  .btn-ghost:hover { border-color: rgba(255,255,255,0.55); background: rgba(255,255,255,0.05); }
+  .nav { height: var(--header-h); display: flex; align-items: center; gap: 32px; }
+  .brand {
+    display: inline-flex; align-items: center; gap: 10px;
+    text-decoration: none; color: var(--text);
+    font-weight: 600; font-size: 1.08rem; letter-spacing: -0.015em;
+  }
+  .brand-mark {
+    width: 34px; height: 34px; border-radius: 9px; background: var(--surface);
+    border: 1px solid var(--line-2); display: grid; place-items: center;
+  }
+  .brand-mark svg { width: 22px; height: 22px; }
+  .brand .dot { color: var(--amber-hi); }
+  .nav-links { display: flex; gap: 4px; margin-left: 8px; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: .92rem; font-weight: 500;
+    padding: 8px 12px; border-radius: 8px; transition: color .15s ease, background .15s ease;
+  }
+  .nav-links a:hover { color: var(--text); background: rgba(255,255,255,.04); }
+  .nav-end { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .nav-toggle {
+    display: none; width: 42px; height: 42px; border-radius: 10px;
+    border: 1px solid var(--line-2); background: transparent; color: var(--text); cursor: pointer;
+    align-items: center; justify-content: center;
+  }
+  .mobile-menu { display: none; }
 
-  .hero-art {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  /* ---------- Hero ---------- */
+  .hero { position: relative; overflow: hidden; padding-block: 88px 104px; isolation: isolate; }
+  .hero::before {
+    content: ""; position: absolute; inset: 0; z-index: -2;
+    background-image:
+      linear-gradient(to right, rgba(245,238,228,.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(245,238,228,.045) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 75%);
   }
+  .hero::after {
+    content: ""; position: absolute; z-index: -1;
+    width: 900px; height: 600px; right: -200px; top: -120px;
+    background: radial-gradient(closest-side, rgba(202,138,4,.22), transparent 70%);
+    filter: blur(10px);
+  }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 64px; align-items: center; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font: 500 .76rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase;
+    color: var(--amber-hi);
+    padding: 8px 14px 8px 10px; border-radius: 999px;
+    background: var(--amber-soft); border: 1px solid rgba(202,138,4,.35);
+  }
+  .eyebrow .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--amber-hi); box-shadow: 0 0 0 4px rgba(234,179,8,.18); }
+  .hero h1 {
+    margin-top: 26px;
+    font-size: clamp(2.5rem, 5.6vw, 4.4rem);
+    line-height: 1.02; letter-spacing: -0.045em; font-weight: 600;
+  }
+  .hero h1 .soft { color: var(--muted); }
+  .hero h1 em { font-style: normal; color: var(--amber-hi); }
+  .hero .lead { margin-top: 26px; font-size: 1.16rem; color: var(--muted); max-width: 50ch; line-height: 1.65; }
+  .hero-actions { margin-top: 36px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero-meta {
+    margin-top: 44px; padding-top: 24px; border-top: 1px solid var(--line);
+    display: flex; flex-wrap: wrap; gap: 12px 28px;
+    font: 400 .82rem/1.4 var(--mono); color: var(--dim);
+  }
+  .hero-meta span { display: inline-flex; align-items: center; gap: 8px; }
+  .hero-meta svg { color: var(--amber); flex-shrink: 0; }
 
-  .hero-art img {
-    width: 100%;
-    max-width: 300px;
-    border-radius: 32px;
-    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6);
+  /* Chat demo */
+  .demo { position: relative; justify-self: end; width: 100%; max-width: 440px; }
+  .demo-label {
+    position: absolute; top: -30px; left: 4px;
+    font: 500 .72rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--dim);
   }
+  .widget {
+    position: relative;
+    background: linear-gradient(180deg, #1f1b18, #181513);
+    border: 1px solid var(--line-2); border-radius: var(--r-xl);
+    box-shadow: 0 40px 80px -30px rgba(0,0,0,.8), 0 0 0 1px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05);
+    overflow: hidden;
+  }
+  .widget-head {
+    display: flex; align-items: center; gap: 12px; padding: 16px 18px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255,255,255,.015);
+  }
+  .avatar {
+    width: 38px; height: 38px; border-radius: 11px; flex-shrink: 0;
+    background: #2a2521; display: grid; place-items: center; border: 1px solid var(--line-2);
+  }
+  .avatar svg { width: 24px; height: 24px; }
+  .widget-head strong { display: block; font-size: .95rem; font-weight: 600; letter-spacing: -0.01em; }
+  .widget-head small { display: flex; align-items: center; gap: 6px; color: var(--dim); font-size: .78rem; }
+  .online { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 3px rgba(74,222,128,.15); }
+  .ai-badge {
+    margin-left: auto; font: 500 .68rem/1 var(--mono); letter-spacing: .04em; text-transform: uppercase;
+    color: var(--muted); padding: 6px 8px; border: 1px solid var(--line-2); border-radius: 6px;
+  }
+  .thread { padding: 20px 18px 8px; display: flex; flex-direction: column; gap: 10px; min-height: 408px; }
+  .msg {
+    max-width: 84%; padding: 11px 14px; font-size: .9rem; line-height: 1.5;
+    border-radius: 16px; transition: opacity .35s ease, transform .35s ease;
+  }
+  .msg.bot { align-self: flex-start; background: var(--surface-2); border: 1px solid var(--line); border-bottom-left-radius: 5px; color: #e7e2dc; }
+  .msg.me { align-self: flex-end; background: var(--amber); color: #1a1408; border-bottom-right-radius: 5px; font-weight: 500; }
+  .slots { display: flex; gap: 8px; margin-top: 10px; }
+  .slot {
+    font: 500 .82rem/1 var(--mono); padding: 8px 12px; border-radius: 8px;
+    border: 1px solid var(--line-2); color: var(--text); background: rgba(255,255,255,.03);
+  }
+  .slot.picked { border-color: var(--amber); color: var(--amber-hi); background: var(--amber-soft); }
+  .confirm { padding: 0; overflow: hidden; }
+  .confirm-top { display: flex; align-items: center; gap: 8px; padding: 10px 14px; color: var(--ok); font-weight: 600; font-size: .86rem; border-bottom: 1px solid var(--line); }
+  .confirm dl { margin: 0; padding: 10px 14px 12px; display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-size: .84rem; }
+  .confirm dt { color: var(--dim); }
+  .confirm dd { margin: 0; font-family: var(--mono); font-size: .8rem; color: var(--text); }
+  .typing { align-self: flex-start; display: inline-flex; gap: 4px; padding: 14px 16px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 16px; border-bottom-left-radius: 5px; }
+  .typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: blink 1.2s infinite ease-in-out; }
+  .typing i:nth-child(2) { animation-delay: .15s; }
+  .typing i:nth-child(3) { animation-delay: .3s; }
+  @keyframes blink { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-2px); } }
+  .widget-input {
+    display: flex; align-items: center; gap: 10px; margin: 8px 12px 12px; padding: 10px 10px 10px 16px;
+    border: 1px solid var(--line-2); border-radius: 14px; color: var(--dim); font-size: .88rem;
+  }
+  .widget-input .send { margin-left: auto; width: 32px; height: 32px; border-radius: 9px; background: var(--amber); color: var(--ink); display: grid; place-items: center; }
+  .toast {
+    position: absolute; left: -72px; bottom: -34px; width: 270px;
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 14px 16px; border-radius: 16px;
+    background: rgba(250, 248, 245, .97); color: var(--ink);
+    box-shadow: 0 24px 50px -16px rgba(0,0,0,.7);
+    transition: opacity .45s ease, transform .45s ease;
+  }
+  .toast .t-ico { width: 34px; height: 34px; border-radius: 9px; background: var(--ink); display: grid; place-items: center; flex-shrink: 0; }
+  .toast .t-ico svg { width: 20px; height: 20px; }
+  .toast strong { display: block; font-size: .86rem; letter-spacing: -0.01em; }
+  .toast span { display: block; font-size: .8rem; color: var(--ink-soft); line-height: 1.4; }
+  .toast time { font: 500 .7rem/1 var(--mono); color: var(--ink-soft); margin-left: auto; padding-top: 2px; }
+  .replay {
+    position: absolute; right: 4px; top: -34px;
+    display: inline-flex; align-items: center; gap: 6px; background: none; border: 0; cursor: pointer;
+    color: var(--dim); font: 500 .72rem/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 6px;
+  }
+  .replay:hover { color: var(--text); }
+  .is-hidden { opacity: 0; transform: translateY(8px); }
+  .is-gone { display: none !important; }
 
-  /* ---------- FEATURES ---------- */
-  .section { padding: 84px 0; }
-  .section-head { max-width: 620px; margin: 0 0 48px; }
-  .section-head .kicker {
-    color: var(--amber);
-    font-weight: 700;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin: 0 0 10px;
-  }
-  .section-head h2 {
-    font-size: clamp(1.6rem, 3vw, 2.1rem);
-    letter-spacing: -0.01em;
-    margin: 0 0 12px;
-  }
-  .section-head p { color: var(--ink-soft); font-size: 1.02rem; margin: 0; }
+  /* ---------- Spec strip ---------- */
+  .specs { border-block: 1px solid var(--line); background: var(--bg-2); }
+  .specs-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .spec { padding: 28px 24px; border-left: 1px solid var(--line); }
+  .spec:first-child { border-left: 0; padding-left: 0; }
+  .spec b { display: block; font: 500 1.6rem/1.1 var(--mono); letter-spacing: -0.03em; color: var(--text); }
+  .spec span { display: block; margin-top: 8px; color: var(--muted); font-size: .88rem; line-height: 1.45; }
 
-  .features {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+  /* ---------- Section heads ---------- */
+  .section { padding-block: 120px; }
+  .kicker {
+    display: inline-flex; align-items: center; gap: 10px;
+    font: 500 .76rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--amber-hi);
   }
+  .kicker::before { content: ""; width: 18px; height: 1px; background: currentColor; }
+  .section-head { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 64px; align-items: end; margin-bottom: 56px; }
+  .section-head h2 { margin-top: 18px; font-size: clamp(2rem, 3.8vw, 3rem); line-height: 1.06; letter-spacing: -0.04em; font-weight: 600; }
+  .section-head p { color: var(--muted); font-size: 1.06rem; max-width: 52ch; }
 
-  .feature-card {
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-    padding: 28px 26px;
+  /* ---------- Bento ---------- */
+  .bento { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card {
+    position: relative; overflow: hidden;
+    background: linear-gradient(180deg, var(--surface), #181513);
+    border: 1px solid var(--line); border-radius: var(--r-xl);
+    padding: 30px; display: flex; flex-direction: column; gap: 22px;
+    transition: border-color .2s ease;
   }
+  .card:hover { border-color: var(--line-2); }
+  .card.wide { grid-column: span 2; }
+  .card h3 { font-size: 1.2rem; font-weight: 600; letter-spacing: -0.02em; }
+  .card p { color: var(--muted); font-size: .96rem; margin-top: 8px; max-width: 46ch; }
+  .card .viz { margin-top: auto; }
 
-  .feature-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: rgba(202,138,4,0.12);
-    color: var(--amber);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 18px;
+  /* week calendar */
+  .week { display: grid; grid-template-columns: 52px repeat(5, 1fr); gap: 6px; font-family: var(--mono); font-size: .74rem; }
+  .week .h { color: var(--dim); text-align: center; padding-bottom: 4px; }
+  .week .t { color: var(--dim); display: flex; align-items: center; }
+  .week .c { height: 34px; border-radius: 7px; border: 1px solid var(--line); background: rgba(255,255,255,.015); }
+  .week .c.b {
+    background: repeating-linear-gradient(135deg, rgba(245,238,228,.06) 0 6px, transparent 6px 12px);
+    border-color: var(--line);
   }
+  .week .c.n {
+    border-color: var(--amber); background: var(--amber-soft); color: var(--amber-hi);
+    display: flex; align-items: center; justify-content: center; font-size: .7rem; font-weight: 500;
+  }
+  /* clock */
+  .clock { display: flex; align-items: baseline; gap: 12px; }
+  .clock b { font: 500 3.2rem/1 var(--mono); letter-spacing: -0.05em; }
+  .clock span { color: var(--dim); font: 400 .8rem/1.4 var(--mono); }
+  .hours { display: grid; grid-template-columns: repeat(24, 1fr); gap: 3px; margin-top: 16px; }
+  .hours i { height: 26px; border-radius: 3px; background: var(--amber); opacity: .9; }
+  .hours i.off { background: var(--surface-2); opacity: 1; }
+  .hours-legend { display: flex; justify-content: space-between; margin-top: 8px; font: 400 .7rem/1 var(--mono); color: var(--dim); }
+  /* channels */
+  .channels { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 0 12px; }
+  .chan-list { display: flex; flex-direction: column; gap: 10px; }
+  .chan {
+    display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+    border: 1px solid var(--line-2); border-radius: 10px; font-size: .86rem; background: rgba(255,255,255,.02);
+  }
+  .chan svg { color: var(--muted); flex-shrink: 0; }
+  .brain {
+    width: 92px; height: 92px; border-radius: 22px; display: grid; place-items: center; text-align: center;
+    background: var(--amber-soft); border: 1px solid rgba(202,138,4,.45);
+    font: 500 .68rem/1.3 var(--mono); color: var(--amber-hi); letter-spacing: .02em; padding: 8px;
+  }
+  .wire { width: 36px; height: 100px; }
+  /* handoff */
+  .handoff { display: flex; flex-direction: column; gap: 8px; }
+  .handoff .row {
+    display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 10px;
+    background: rgba(255,255,255,.025); border: 1px solid var(--line); font-size: .84rem;
+  }
+  .handoff .row.hl { border-color: rgba(202,138,4,.5); background: var(--amber-soft); }
+  .handoff .row small { margin-left: auto; font: 400 .72rem/1 var(--mono); color: var(--dim); }
+  .handoff .ic { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; background: var(--surface-2); color: var(--muted); flex-shrink: 0; }
+  .handoff .row.hl .ic { background: var(--amber); color: var(--ink); }
+  /* transparency */
+  .quote-bubble {
+    padding: 14px 16px; border-radius: 14px; border-bottom-left-radius: 4px;
+    background: var(--surface-2); border: 1px solid var(--line); font-size: .9rem; color: #e7e2dc;
+  }
+  .quote-bubble b { color: var(--amber-hi); font-weight: 500; }
+  .checks { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; font-size: .86rem; color: var(--muted); }
+  .checks li { display: flex; gap: 10px; align-items: flex-start; }
+  .checks svg { color: var(--amber-hi); flex-shrink: 0; margin-top: 3px; }
 
-  .feature-card h3 {
-    font-size: 1.08rem;
-    margin: 0 0 8px;
-    letter-spacing: -0.01em;
-  }
-  .feature-card p { color: var(--ink-soft); font-size: 0.95rem; margin: 0; }
+  /* ---------- Light sections ---------- */
+  .light { background: var(--cream); color: var(--ink); }
+  .light .kicker { color: #a16207; }
+  .light .section-head p { color: var(--ink-soft); }
 
-  /* ---------- ABOUT ---------- */
-  .about {
-    background: var(--bg-dark-soft);
-    color: #fff;
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; counter-reset: step; }
+  .step { padding: 0 28px 0 0; position: relative; }
+  .step-num {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 28px;
+    font: 500 .8rem/1 var(--mono); color: #a16207; letter-spacing: .06em;
   }
-  .about-inner {
-    display: grid;
-    grid-template-columns: 0.8fr 1.2fr;
-    gap: 56px;
-    align-items: center;
+  .step-num::after { content: ""; flex: 1; height: 1px; background: var(--ink-line); }
+  .step:last-child .step-num::after { background: linear-gradient(90deg, var(--ink-line), transparent); }
+  .step-num span {
+    width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center;
+    background: #fff; border: 1px solid var(--ink-line); color: var(--ink); font-size: .9rem;
+    box-shadow: 0 1px 2px rgba(28,25,23,.06);
   }
-  .about-photo {
-    width: 100%;
-    aspect-ratio: 1;
-    border-radius: var(--radius-lg);
-    background:
-      radial-gradient(circle at 30% 20%, rgba(202,138,4,0.35), transparent 55%),
-      #14110f;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(255,255,255,0.08);
-  }
-  .about-photo img { width: 96px; height: 96px; opacity: 0.9; }
+  .step h3 { font-size: 1.14rem; font-weight: 600; letter-spacing: -0.02em; }
+  .step p { margin-top: 10px; color: var(--ink-soft); font-size: .95rem; }
+  .step ul { margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+  .step li { font: 400 .8rem/1.4 var(--mono); color: #78716c; display: flex; gap: 8px; }
+  .step li::before { content: "—"; color: #c9bfb3; }
 
-  .about h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 16px; letter-spacing: -0.01em; }
-  .about p { color: #d6d3d1; font-size: 1.02rem; margin: 0 0 14px; }
-  .about .signature { color: #fff; font-weight: 600; margin-top: 22px; }
-  .about .signature span { display: block; color: #a8a29e; font-weight: 400; font-size: 0.9rem; margin-top: 2px; }
+  /* ---------- Trust ---------- */
+  .trust { background: var(--bg-2); border-top: 1px solid var(--line); }
+  .trust-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r-xl); overflow: hidden; }
+  .fact { background: var(--bg-2); padding: 28px; }
+  .fact .fi { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; background: var(--amber-soft); color: var(--amber-hi); margin-bottom: 18px; }
+  .fact h3 { font-size: 1rem; font-weight: 600; letter-spacing: -0.01em; }
+  .fact p { margin-top: 8px; color: var(--muted); font-size: .9rem; }
+  .fact code { font-family: var(--mono); font-size: .8rem; color: var(--text); background: var(--surface-2); padding: 2px 6px; border-radius: 5px; }
 
-  /* ---------- CONTACT ---------- */
-  .contact-card {
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-    padding: 44px;
-    display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: 40px;
-    align-items: center;
-  }
-  .contact-card h2 { margin: 0 0 12px; font-size: clamp(1.5rem, 3vw, 1.9rem); letter-spacing: -0.01em; }
-  .contact-card p { color: var(--ink-soft); margin: 0; }
+  .trust-lower { display: grid; grid-template-columns: 1.25fr 1fr; gap: 16px; margin-top: 16px; }
+  .trust-lower > *, .hero-grid > *, .contact-grid > * { min-width: 0; }
+  .panel { border: 1px solid var(--line); border-radius: var(--r-xl); padding: 28px; background: var(--surface); }
+  .panel h3 { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
+  .panel .sub { color: var(--dim); font-size: .86rem; }
+  .table-wrap { overflow-x: auto; margin-top: 18px; }
+  .proc { width: 100%; border-collapse: collapse; font-size: .88rem; min-width: 420px; }
+  .proc th { text-align: left; font: 500 .7rem/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--dim); padding: 0 12px 12px 0; border-bottom: 1px solid var(--line-2); }
+  .proc td { padding: 13px 12px 13px 0; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--muted); }
+  .proc tr:last-child td { border-bottom: 0; }
+  .proc td:first-child { color: var(--text); font-weight: 500; white-space: nowrap; }
+  .proc .loc { font-family: var(--mono); font-size: .76rem; color: var(--dim); }
 
-  .contact-links { display: flex; flex-direction: column; gap: 14px; }
-  .contact-link {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 12px 12px 12px 18px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    transition: border-color 0.15s ease, background 0.15s ease;
+  .docs { display: flex; flex-direction: column; gap: 12px; }
+  .doc-link {
+    display: flex; align-items: center; gap: 16px; padding: 20px 22px; border-radius: var(--r-lg);
+    border: 1px solid var(--line); background: var(--surface); text-decoration: none;
+    transition: border-color .18s ease, background .18s ease, transform .18s ease;
   }
-  .contact-link:hover { border-color: var(--amber); background: #fffaf0; }
-  .contact-link .ico {
-    width: 38px; height: 38px;
-    border-radius: 10px;
-    background: rgba(202,138,4,0.12);
-    color: var(--amber);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .contact-link a.value {
-    color: var(--ink);
-    font-weight: 600;
-    text-decoration: none;
-  }
-  .contact-link a.value:hover { text-decoration: underline; }
-  .contact-link small { display: block; color: var(--ink-soft); font-weight: 400; font-size: 0.82rem; }
-  .contact-link .text { flex: 1; min-width: 0; }
+  .doc-link:hover { border-color: rgba(202,138,4,.55); background: #211d1a; transform: translateY(-1px); }
+  .doc-link .di { width: 44px; height: 52px; border-radius: 8px; border: 1px solid var(--line-2); display: grid; place-items: center; color: var(--amber-hi); flex-shrink: 0; background: var(--bg-2); }
+  .doc-link strong { display: block; font-size: 1rem; font-weight: 600; letter-spacing: -0.01em; }
+  .doc-link span { display: block; font-size: .84rem; color: var(--dim); margin-top: 2px; }
+  .doc-link .arr { margin-left: auto; color: var(--dim); transition: color .18s ease, transform .18s ease; }
+  .doc-link:hover .arr { color: var(--amber-hi); transform: translateX(3px); }
 
+  /* ---------- About ---------- */
+  .about-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 72px; align-items: center; }
+  .portrait {
+    position: relative; aspect-ratio: 4 / 5; max-width: 100%; border-radius: var(--r-xl); overflow: hidden;
+    background: radial-gradient(120% 80% at 20% 0%, rgba(202,138,4,.35), transparent 55%), var(--ink);
+    display: flex; flex-direction: column; justify-content: space-between; padding: 30px; color: var(--text);
+  }
+  .portrait::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: linear-gradient(to right, rgba(245,238,228,.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(245,238,228,.05) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .portrait > * { position: relative; }
+  .portrait .big-mark { width: 45%; align-self: center; margin-top: 12%; }
+  .portrait .id { font: 400 .78rem/1.6 var(--mono); color: var(--muted); border-top: 1px solid var(--line-2); padding-top: 16px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .portrait .id b { color: var(--text); font-weight: 500; }
+  .about-copy h2 { margin-top: 18px; font-size: clamp(2rem, 3.6vw, 2.8rem); line-height: 1.08; letter-spacing: -0.04em; font-weight: 600; }
+  .about-copy p { margin-top: 20px; color: var(--ink-soft); font-size: 1.06rem; max-width: 56ch; }
+  .about-copy p strong { color: var(--ink); }
+  .sig { margin-top: 32px; display: flex; align-items: center; gap: 16px; padding-top: 24px; border-top: 1px solid var(--ink-line); }
+  .sig .initials { width: 48px; height: 48px; border-radius: 50%; background: var(--ink); color: var(--amber-hi); display: grid; place-items: center; font: 500 .95rem/1 var(--mono); }
+  .sig strong { display: block; font-weight: 600; }
+  .sig span { display: block; color: var(--ink-soft); font-size: .88rem; }
+  .fit { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .fit span { font-size: .84rem; padding: 7px 12px; border-radius: 999px; background: #fff; border: 1px solid var(--ink-line); color: var(--ink-soft); }
+
+  /* ---------- Contact ---------- */
+  .contact { position: relative; overflow: hidden; isolation: isolate; }
+  .contact::after {
+    content: ""; position: absolute; z-index: -1; left: 50%; bottom: -380px; transform: translateX(-50%);
+    width: 1100px; height: 640px; background: radial-gradient(closest-side, rgba(202,138,4,.2), transparent 70%);
+  }
+  .contact-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 64px; align-items: center; }
+  .contact h2 { margin-top: 18px; font-size: clamp(2.2rem, 4.6vw, 3.6rem); line-height: 1.02; letter-spacing: -0.045em; font-weight: 600; }
+  .contact .lead { margin-top: 22px; color: var(--muted); font-size: 1.1rem; max-width: 46ch; }
+  .contact-card { border: 1px solid var(--line-2); border-radius: var(--r-xl); background: rgba(28,25,23,.8); padding: 10px; backdrop-filter: blur(8px); }
+  .c-row { display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 16px; transition: background .15s ease; }
+  .c-row + .c-row { border-top: 1px solid var(--line); border-radius: 0 0 16px 16px; }
+  .c-row:hover { background: rgba(255,255,255,.03); }
+  .c-ico { width: 44px; height: 44px; border-radius: 12px; background: var(--amber-soft); color: var(--amber-hi); display: grid; place-items: center; flex-shrink: 0; }
+  .c-text { flex: 1; min-width: 0; }
+  .c-text small { display: block; font: 500 .7rem/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--dim); margin-bottom: 6px; }
+  .c-text a { font-weight: 600; font-size: 1.04rem; text-decoration: none; color: var(--text); overflow-wrap: anywhere; user-select: all; }
+  .c-text a:hover { text-decoration: underline; text-underline-offset: 3px; }
   .copy-btn {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--cream);
-    border: 1px solid var(--line);
-    color: var(--ink-soft);
-    font-family: inherit;
-    font-size: 0.82rem;
-    font-weight: 600;
-    padding: 9px 13px;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+    flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px;
+    background: transparent; border: 1px solid var(--line-2); color: var(--muted);
+    font: 500 .8rem/1 var(--sans); padding: 9px 12px; border-radius: 999px; cursor: pointer;
+    transition: border-color .15s ease, color .15s ease, background .15s ease;
   }
-  .copy-btn:hover { border-color: var(--amber); color: var(--amber); }
-  .copy-btn.copied { border-color: var(--amber); background: var(--amber); color: #fff; }
-  .copy-btn svg { flex-shrink: 0; }
+  .copy-btn:hover { border-color: var(--amber); color: var(--amber-hi); }
+  .copy-btn.copied { border-color: var(--amber); background: var(--amber); color: var(--ink); }
+  .contact-note { padding: 14px 16px 8px; font-size: .82rem; color: var(--dim); }
 
-  /* ---------- FOOTER ---------- */
-  footer {
-    background: var(--bg-dark);
-    color: #a8a29e;
-    padding: 32px 0;
-    font-size: 0.88rem;
-  }
-  .footer-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  .footer-inner .brand { font-size: 0.95rem; }
+  /* ---------- Footer ---------- */
+  .site-footer { border-top: 1px solid var(--line); background: #0b0a08; padding-block: 64px 36px; color: var(--muted); font-size: .9rem; }
+  .foot-grid { display: grid; grid-template-columns: 1.6fr repeat(3, 1fr); gap: 40px; }
+  .foot-grid p { margin-top: 16px; max-width: 34ch; color: var(--dim); }
+  .foot-col h4 { margin: 0 0 16px; font: 500 .72rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+  .foot-col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .foot-col a { text-decoration: none; color: var(--muted); transition: color .15s ease; }
+  .foot-col a:hover { color: var(--text); }
+  .foot-bottom { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: .84rem; color: var(--dim); }
 
-  /* ---------- RESPONSIVE ---------- */
-  @media (max-width: 860px) {
-    .hero-inner { grid-template-columns: 1fr; }
-    .hero-art { order: -1; }
-    .hero-art img { max-width: 180px; }
-    .features { grid-template-columns: 1fr; }
-    .about-inner { grid-template-columns: 1fr; }
-    .about-photo { max-width: 200px; margin: 0 auto; }
-    .contact-card { grid-template-columns: 1fr; padding: 30px; }
-    .nav-links { display: none; }
+  /* ---------- Responsive ---------- */
+  @media (max-width: 1080px) {
+    .toast { left: -24px; bottom: -40px; }
+    .nav-links a { padding: 8px 9px; }
+  }
+  @media (max-width: 960px) {
+    .hero-grid, .section-head, .about-grid, .contact-grid, .trust-lower { grid-template-columns: 1fr; }
+    .hero { padding-block: 64px 80px; }
+    .demo { justify-self: center; margin-top: 32px; }
+    .toast { left: auto; right: -8px; bottom: -28px; }
+    .bento { grid-template-columns: 1fr 1fr; }
+    .card.wide { grid-column: span 2; }
+    .steps { grid-template-columns: 1fr 1fr; gap: 48px 0; }
+    .trust-grid { grid-template-columns: 1fr 1fr; }
+    .specs-grid { grid-template-columns: 1fr 1fr; }
+    .spec:nth-child(3) { border-left: 0; padding-left: 0; }
+    .spec:nth-child(n+3) { border-top: 1px solid var(--line); }
+    .foot-grid { grid-template-columns: 1fr 1fr; }
+    .foot-grid > :first-child { grid-column: span 2; }
+    .portrait { max-width: 420px; aspect-ratio: 1 / 1; }
+    .section { padding-block: 88px; }
+  }
+  @media (max-width: 820px) {
+    .nav-links, .nav-end .btn-ghost { display: none; }
+    .nav-toggle { display: inline-flex; }
+    .mobile-menu {
+      display: block; position: absolute; left: 0; right: 0; top: 100%;
+      background: rgba(15,13,11,.97); border-bottom: 1px solid var(--line);
+      padding: 8px 24px 20px;
+    }
+    .mobile-menu a { display: block; padding: 14px 0; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--text); font-weight: 500; }
+    .mobile-menu a:last-child { border-bottom: 0; }
+  }
+  @media (max-width: 640px) {
+    .wrap { padding-inline: 18px; }
+    .bento, .trust-grid, .steps { grid-template-columns: 1fr; }
+    .card.wide { grid-column: auto; }
+    .card { padding: 24px; }
+    .step { padding: 0; }
+    .hero-actions .btn { flex: 1 1 auto; }
+    .week { grid-template-columns: 40px repeat(5, 1fr); gap: 4px; }
+    .thread { min-height: 0; }
+    .toast { position: relative; right: auto; bottom: auto; width: auto; margin: 14px 12px 0; }
+    .c-row { flex-wrap: wrap; }
+    .copy-btn { margin-left: 58px; }
+    .foot-grid { grid-template-columns: 1fr; }
+    .foot-grid > :first-child { grid-column: auto; }
+    .nav-end .btn-primary { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition: none !important; animation: none !important; }
   }
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="mark" viewBox="80 88 368 356">
+      <path d="M130 98H275a40 40 0 0 1 40 40v65a40 40 0 0 1-40 40H178l-60 47 22-47h-10a40 40 0 0 1-40-40v-65a40 40 0 0 1 40-40z" fill="none" stroke="currentColor" stroke-width="18" stroke-linejoin="round"/>
+      <path d="M246 240h149a40 40 0 0 1 40 40v70a40 40 0 0 1-40 40h-20l20 42-60-42h-89a40 40 0 0 1-40-40v-70a40 40 0 0 1 40-40z" fill="#ca8a04"/>
+    </symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></g></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></g></symbol>
+  </defs>
+</svg>
 
-<header>
+<a class="skip" href="#main">Přeskočit na obsah</a>
+
+<header class="site-header">
   <div class="wrap nav">
-    <a class="brand" href="#top">
-      <img src="assets/icon-192.png" alt="Odpovi.to">
-      Odpovi.to
+    <a class="brand" href="#top" aria-label="Odpovi.to – úvod">
+      <span class="brand-mark"><svg><use href="#mark" color="#fff"/></svg></span>
+      <span>Odpovi<span class="dot">.</span>to</span>
     </a>
-    <nav class="nav-links">
-      <a href="#sluzby">Co dělám</a>
+    <nav class="nav-links" aria-label="Hlavní navigace">
+      <a href="#funkce">Funkce</a>
+      <a href="#postup">Jak to probíhá</a>
+      <a href="#bezpecnost">Bezpečnost</a>
       <a href="#o-mne">O mně</a>
-      <a href="#kontakt">Kontakt</a>
-      <a href="privacy-policy.html">Privacy Policy</a>
+      <a href="privacy.html">Ochrana údajů</a>
     </nav>
-    <a class="nav-cta" href="#kontakt">Napsat</a>
+    <div class="nav-end">
+      <a class="btn btn-ghost btn-sm" href="tel:+420604779519">+420 604 779 519</a>
+      <a class="btn btn-primary btn-sm" href="#kontakt">Domluvit konzultaci</a>
+      <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Otevřít menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
   </div>
+  <nav class="mobile-menu" id="mobileMenu" hidden aria-label="Mobilní navigace">
+    <a href="#funkce">Funkce</a>
+    <a href="#postup">Jak to probíhá</a>
+    <a href="#bezpecnost">Bezpečnost</a>
+    <a href="#o-mne">O mně</a>
+    <a href="#kontakt">Kontakt</a>
+    <a href="privacy.html">Ochrana osobních údajů</a>
+    <a href="privacy-policy.html">Privacy Policy</a>
+  </nav>
 </header>
 
-<main id="top">
+<main id="main">
 
   <!-- HERO -->
-  <section class="hero">
-    <div class="wrap hero-inner">
+  <section class="hero" id="top">
+    <div class="wrap hero-grid">
       <div>
-        <span class="eyebrow">AI chatboti na míru</span>
-        <h1>Zákazník napíše.<br>Bot to <span class="accent">vyřídí</span>.<br>Vy máte čas na práci.</h1>
+        <span class="eyebrow"><span class="pulse"></span>AI asistent pro rezervace a podporu</span>
+        <h1>Zákazník napíše.<br>Bot to <em>vyřídí</em>.<br><span class="soft">Vy máte čas na práci.</span></h1>
         <p class="lead">
-          Navrhuju a nasazuju AI chatboty pro rezervace a zákaznickou podporu —
-          na webu i na Facebook Messengeru. Odpovídají za vás 24 hodin denně,
-          a když je potřeba, klidně slovo předají vám.
+          Navrhuju a nasazuju AI chatboty pro rezervace a zákaznickou podporu na webu
+          i na Facebook Messengeru. Odpovídají za vás 24 hodin denně, a když je potřeba,
+          předají slovo vám.
         </p>
         <div class="hero-actions">
-          <a class="btn-primary" href="#kontakt">Domluvit konzultaci →</a>
-          <a class="btn-ghost" href="#sluzby">Co přesně dělám</a>
+          <a class="btn btn-primary" href="#kontakt">Domluvit konzultaci <svg width="18" height="18"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-ghost" href="#funkce">Co bot umí</a>
+        </div>
+        <div class="hero-meta">
+          <span><svg width="14" height="14"><use href="#i-check"/></svg>Web i Messenger</span>
+          <span><svg width="14" height="14"><use href="#i-check"/></svg>Rezervace bez telefonování</span>
+          <span><svg width="14" height="14"><use href="#i-check"/></svg>Předání živému člověku</span>
         </div>
       </div>
-      <div class="hero-art">
-        <img src="assets/icon-512.png" alt="Odpovi.to — logo">
+
+      <div class="demo" aria-label="Ukázka konverzace s chatbotem">
+        <span class="demo-label">Ukázka · web widget</span>
+        <button class="replay" id="replay" type="button">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+          Přehrát znovu
+        </button>
+        <div class="widget">
+          <div class="widget-head">
+            <span class="avatar"><svg><use href="#mark" color="#fff"/></svg></span>
+            <div>
+              <strong>Salon Linea</strong>
+              <small><span class="online"></span>Odpovídá okamžitě</small>
+            </div>
+            <span class="ai-badge">AI asistent</span>
+          </div>
+          <div class="thread" id="thread">
+            <div class="msg bot" data-step>Dobrý den, jsem automatický asistent salonu Linea. S čím vám můžu pomoct?</div>
+            <div class="msg me" data-step>Máte ve čtvrtek odpoledne volno na dámský střih?</div>
+            <div class="msg bot" data-step>Ve čtvrtek 1. 10. mám volno v těchto časech:
+              <div class="slots"><span class="slot">14:00</span><span class="slot" id="pick">16:30</span><span class="slot">17:15</span></div>
+            </div>
+            <div class="msg me" data-step>16:30, prosím.</div>
+            <div class="msg bot" data-step>Na jaké jméno a telefon rezervaci zapíšu?</div>
+            <div class="msg me" data-step>Jana, 777 000 111</div>
+            <div class="msg bot confirm" data-step>
+              <div class="confirm-top"><svg width="16" height="16"><use href="#i-check"/></svg>Rezervace potvrzena</div>
+              <dl>
+                <dt>Termín</dt><dd>Čt 1. 10. · 16:30</dd>
+                <dt>Služba</dt><dd>Dámský střih</dd>
+                <dt>Jméno</dt><dd>Jana</dd>
+              </dl>
+            </div>
+          </div>
+          <div class="widget-input" aria-hidden="true">
+            Napište zprávu…
+            <span class="send"><svg width="16" height="16"><use href="#i-arrow"/></svg></span>
+          </div>
+        </div>
+        <div class="toast" id="toast" role="status">
+          <span class="t-ico"><svg><use href="#mark" color="#fff"/></svg></span>
+          <div>
+            <strong>Nová rezervace</strong>
+            <span>Jana · Dámský střih · Čt 16:30</span>
+          </div>
+          <time>teď</time>
+        </div>
       </div>
     </div>
   </section>
 
+  <!-- SPECS -->
+  <div class="specs">
+    <div class="wrap specs-grid">
+      <div class="spec"><b>24/7</b><span>odpovědi i mimo otevírací dobu</span></div>
+      <div class="spec"><b>2 kanály</b><span>web a Facebook Messenger, jedna znalostní báze</span></div>
+      <div class="spec"><b>1 věta</b><span>„Chci mluvit s člověkem“ stačí k předání konverzace</span></div>
+      <div class="spec"><b>0 dat</b><span>prodaných nebo sdílených pro reklamu</span></div>
+    </div>
+  </div>
+
   <!-- FEATURES -->
-  <section class="section" id="sluzby">
+  <section class="section" id="funkce">
     <div class="wrap">
       <div class="section-head">
-        <p class="kicker">Co dělám</p>
-        <h2>Chatbot, který doopravdy pracuje</h2>
-        <p>Ne generický skript s pár předpřipravenými odpověďmi — bota, který rozumí kontextu, umí založit i zrušit rezervaci a ví, kdy má předat slovo člověku.</p>
+        <div>
+          <span class="kicker">Funkce</span>
+          <h2>Chatbot, který doopravdy pracuje</h2>
+        </div>
+        <p>Žádný generický skript s pár předpřipravenými odpověďmi. Bot rozumí kontextu, umí založit i zrušit rezervaci a ví, kdy má předat slovo člověku.</p>
       </div>
-      <div class="features">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+
+      <div class="bento">
+        <article class="card wide">
+          <div>
+            <h3>Rezervace bez telefonování</h3>
+            <p>Zákazník si termín domluví přímo v chatu. Bot ověří volno v kalendáři a rezervaci rovnou založí, bez vašeho zásahu. Stejně snadno ji zákazník i zruší.</p>
           </div>
-          <h3>Rezervace bez telefonování</h3>
-          <p>Zákazník si termín domluví přímo v chatu — bot ověří volno v kalendáři a rezervaci rovnou založí, bez vašeho zásahu.</p>
+          <div class="viz week" aria-hidden="true">
+            <span></span><span class="h">Po</span><span class="h">Út</span><span class="h">St</span><span class="h">Čt</span><span class="h">Pá</span>
+            <span class="t">14:00</span><span class="c b"></span><span class="c"></span><span class="c b"></span><span class="c b"></span><span class="c"></span>
+            <span class="t">15:30</span><span class="c"></span><span class="c b"></span><span class="c b"></span><span class="c"></span><span class="c b"></span>
+            <span class="t">16:30</span><span class="c b"></span><span class="c b"></span><span class="c"></span><span class="c n">Nová</span><span class="c b"></span>
+            <span class="t">17:15</span><span class="c"></span><span class="c b"></span><span class="c b"></span><span class="c"></span><span class="c"></span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div>
+            <h3>Odpovídá ve dne v noci</h3>
+            <p>Otevírací dobu, ceník i časté dotazy vyřídí i mimo pracovní dobu. Zákazník nečeká do rána.</p>
+          </div>
+          <div class="viz" aria-hidden="true">
+            <div class="clock"><b>02:14</b><span>dotaz na ceník<br>zodpovězeno</span></div>
+            <div class="hours">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+            <div class="hours-legend"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div>
+            <h3>Web i Messenger, jeden mozek</h3>
+            <p>Stejný bot běží na vašem webu i na Facebook Messengeru, se stejnými znalostmi. Žádná práce navíc.</p>
+          </div>
+          <div class="viz channels" aria-hidden="true">
+            <div class="chan-list">
+              <div class="chan"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20"/></svg>Chat na webu</div>
+              <div class="chan"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2-5.3A8.4 8.4 0 1 1 21 11.5z"/></svg>Messenger</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <svg class="wire" viewBox="0 0 36 100" fill="none"><path d="M0 26C20 26 16 50 36 50M0 74C20 74 16 50 36 50" stroke="#ca8a04" stroke-width="1.5" stroke-dasharray="3 3"/></svg>
+              <div class="brain">jedna<br>znalostní<br>báze</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div>
+            <h3>Ví, kdy předat slovo</h3>
+            <p>Na požádání bot konverzaci předá živému člověku. Vám přijde upozornění i s kontaktem na zákazníka.</p>
+          </div>
+          <div class="viz handoff" aria-hidden="true">
+            <div class="row"><span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>„Chci mluvit s člověkem“<small>14:02</small></div>
+            <div class="row hl"><span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg></span>Upozornění na váš telefon<small>14:02</small></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div>
+            <h3>Férový vůči zákazníkům</h3>
+            <p>Bot se vždy představí jako automatický asistent a nic důležitého nerozhoduje za zákazníka.</p>
+          </div>
+          <div class="viz" aria-hidden="true">
+            <div class="quote-bubble">Dobrý den, jsem <b>automatický asistent</b>. S čím vám můžu pomoct?</div>
+            <ul class="checks">
+              <li><svg width="14" height="14"><use href="#i-check"/></svg>Rezervaci vždy potvrzuje zákazník</li>
+              <li><svg width="14" height="14"><use href="#i-check"/></svg>Člověk je k dispozici na požádání</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="section light" id="postup">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <span class="kicker">Jak to probíhá</span>
+          <h2>Od prvního hovoru ke spuštěnému botovi</h2>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-          </div>
-          <h3>Odpovídá ve dne v noci</h3>
-          <p>Otevírací dobu, ceník i časté dotazy vyřídí i mimo pracovní dobu — zákazník nečeká do rána na odpověď.</p>
+        <p>O techniku se starám já. Vy mi řeknete, jak vaše firma funguje, a pak jen kontrolujete, že bot odpovídá tak, jak byste odpověděli vy.</p>
+      </div>
+      <ol class="steps" style="list-style:none;margin:0;padding:0">
+        <li class="step">
+          <div class="step-num"><span>1</span></div>
+          <h3>Konzultace</h3>
+          <p>Projdeme, na co se vás zákazníci nejčastěji ptají a kolik času vám to bere.</p>
+          <ul><li>nezávazně</li><li>telefonicky nebo e-mailem</li></ul>
+        </li>
+        <li class="step">
+          <div class="step-num"><span>2</span></div>
+          <h3>Znalosti a pravidla</h3>
+          <p>Sestavím znalostní bázi z vašich služeb, ceníku a otevírací doby a nastavím pravidla rezervací.</p>
+          <ul><li>ceník a služby</li><li>časté dotazy</li></ul>
+        </li>
+        <li class="step">
+          <div class="step-num"><span>3</span></div>
+          <h3>Napojení</h3>
+          <p>Bot se objeví na vašem webu a propojí se s vaší Facebook stránkou a kalendářem.</p>
+          <ul><li>chat na webu</li><li>Facebook Messenger</li></ul>
+        </li>
+        <li class="step">
+          <div class="step-num"><span>4</span></div>
+          <h3>Spuštění a ladění</h3>
+          <p>Po spuštění sleduju, jak bot odpovídá, a dolaďuju ho podle skutečných konverzací.</p>
+          <ul><li>úpravy odpovědí</li><li>nové služby a změny</li></ul>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- TRUST -->
+  <section class="section trust" id="bezpecnost">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <span class="kicker">Bezpečnost a soukromí</span>
+          <h2>Přesně víte, co se děje s daty</h2>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <p>Bot zpracovává jen to, co potřebuje k odpovědi a k rezervaci. Všechno je popsané v zásadách ochrany osobních údajů, včetně toho, jak data smazat.</p>
+      </div>
+
+      <div class="trust-grid">
+        <div class="fact">
+          <div class="fi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg></div>
+          <h3>Webový chat nic neukládá</h3>
+          <p>Historii konverzace z webu si drží prohlížeč zákazníka. Server ji dostane jen pro vytvoření aktuální odpovědi.</p>
+        </div>
+        <div class="fact">
+          <div class="fi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/></svg></div>
+          <h3>Messenger jen v paměti</h3>
+          <p>Nejvýše <code>40</code> posledních zpráv na konverzaci, pouze v operační paměti. Restartem serveru nevratně zmizí.</p>
+        </div>
+        <div class="fact">
+          <div class="fi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <h3>HTTPS a ověřené požadavky</h3>
+          <p>Veškerá komunikace běží přes HTTPS. Požadavky od Facebooku se ověřují podpisem, administrace je chráněná heslem.</p>
+        </div>
+        <div class="fact">
+          <div class="fi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></div>
+          <h3>Upozornění se mažou sama</h3>
+          <p>Upozornění na předání člověku obsahují jen začátek zprávy (asi 120 znaků) a po nastaveném počtu dní se automaticky smažou.</p>
+        </div>
+        <div class="fact">
+          <div class="fi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/><path d="M3 3l18 18"/></svg></div>
+          <h3>Odpojení jedním klepnutím</h3>
+          <p>Odpojením Facebooku v administraci se přístupový token, ID stránky i jméno smažou okamžitě.</p>
+        </div>
+        <div class="fact">
+          <div class="fi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+          <h3>Práva podle GDPR</h3>
+          <p>Přístup, oprava, výmaz, omezení i přenositelnost. Žádost vyřídíme nejpozději do 30 dnů.</p>
+        </div>
+      </div>
+
+      <div class="trust-lower">
+        <div class="panel">
+          <h3>Kdo se na zpracování podílí</h3>
+          <p class="sub">Údaje předáváme jen v rozsahu nutném pro provoz služby.</p>
+          <div class="table-wrap">
+            <table class="proc">
+              <thead><tr><th>Poskytovatel</th><th>Role</th></tr></thead>
+              <tbody>
+                <tr><td>Meta Platforms Ireland</td><td>Doručování zpráv Facebook Messengeru <span class="loc">· EU</span></td></tr>
+                <tr><td>Groq, Inc.</td><td>Zpracování textu zpráv umělou inteligencí <span class="loc">· USA</span></td></tr>
+                <tr><td>Render</td><td>Hosting a provoz serveru</td></tr>
+                <tr><td>Google, Apple, Mozilla</td><td>Doručení push upozornění na zařízení klienta</td></tr>
+              </tbody>
+            </table>
           </div>
-          <h3>Web i Messenger, jeden mozek</h3>
-          <p>Stejný bot běží na vašem webu i na Facebook Messengeru — se stejnou znalostní bází, bez duplicitní práce navíc.</p>
+        </div>
+        <div class="docs">
+          <a class="doc-link" href="privacy.html">
+            <span class="di"><svg width="22" height="22"><use href="#i-doc"/></svg></span>
+            <span><strong>Zásady ochrany osobních údajů</strong><span>Kompletní přehled včetně propojení s Facebookem</span></span>
+            <svg class="arr" width="18" height="18"><use href="#i-arrow"/></svg>
+          </a>
+          <a class="doc-link" href="privacy-policy.html">
+            <span class="di"><svg width="22" height="22"><use href="#i-doc"/></svg></span>
+            <span><strong>Privacy Policy</strong><span>Zásady pro uživatele chatbota na webu a v Messengeru</span></span>
+            <svg class="arr" width="18" height="18"><use href="#i-arrow"/></svg>
+          </a>
+          <a class="doc-link" href="privacy.html#smazani">
+            <span class="di"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg></span>
+            <span><strong>Jak smazat svá data</strong><span>Tři způsoby, vyřízení nejpozději do 30 dnů</span></span>
+            <svg class="arr" width="18" height="18"><use href="#i-arrow"/></svg>
+          </a>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ABOUT -->
-  <section class="section about" id="o-mne">
-    <div class="wrap about-inner">
-      <div class="about-photo">
-        <img src="assets/icon-192.png" alt="">
+  <section class="section light" id="o-mne">
+    <div class="wrap about-grid">
+      <div class="portrait" aria-hidden="true">
+        <span class="mono" style="font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Odpovi.to</span>
+        <svg class="big-mark"><use href="#mark" color="#fff"/></svg>
+        <div class="id"><span><b>Pavel Tomášek</b><br>zakladatel, OSVČ</span><span>AI chatboti<br>na míru</span></div>
       </div>
-      <div>
-        <h2>Kdo za tím stojí</h2>
+      <div class="about-copy">
+        <span class="kicker">Kdo za tím stojí</span>
+        <h2>Jeden člověk, se kterým mluvíte od začátku do konce</h2>
         <p>
-          Jsem <strong>Pavel Tomášek</strong>, pracuju jako OSVČ a stavím AI asistenty
-          na míru malým a středním podnikům — od kadeřnictví po restaurace.
+          Jsem <strong>Pavel Tomášek</strong>, pracuju jako OSVČ a stavím AI asistenty na míru
+          malým a středním podnikům, od kadeřnictví po restaurace.
         </p>
         <p>
-          Cíl je jednoduchý: aby majitelé netrávili hodiny odpovídáním na ty samé
-          dotazy pořád dokola, a zákazníci dostali odpověď hned, klidně o půlnoci.
+          Cíl je jednoduchý: aby majitelé netrávili hodiny odpovídáním na ty samé dotazy
+          pořád dokola a zákazníci dostali odpověď hned, klidně o půlnoci.
         </p>
-        <p class="signature">
-          Pavel Tomášek
-          <span>Odpovi.to · AI chatboti pro rezervace a podporu</span>
-        </p>
+        <div class="fit">
+          <span>Kadeřnictví a salony</span><span>Restaurace</span><span>Služby na objednávku</span><span>Malé a střední firmy</span>
+        </div>
+        <div class="sig">
+          <span class="initials">PT</span>
+          <div><strong>Pavel Tomášek</strong><span>Odpovi.to · AI chatboti pro rezervace a podporu</span></div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- CONTACT -->
-  <section class="section" id="kontakt">
-    <div class="wrap">
+  <section class="section contact" id="kontakt">
+    <div class="wrap contact-grid">
+      <div>
+        <span class="kicker">Kontakt</span>
+        <h2>Pojďme si promluvit</h2>
+        <p class="lead">Napište nebo zavolejte. Probereme, jestli by vám chatbot ušetřil čas a jak by mohl vypadat.</p>
+      </div>
       <div class="contact-card">
-        <div>
-          <h2>Pojďme si promluvit</h2>
-          <p>Napište nebo zavolejte — probereme, jestli by vám chatbot ušetřil čas, a jak by mohl vypadat.</p>
+        <div class="c-row">
+          <span class="c-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg></span>
+          <span class="c-text"><small>E-mail</small><a href="mailto:tomikus.p@gmail.com">tomikus.p@gmail.com</a></span>
+          <button class="copy-btn" data-copy="tomikus.p@gmail.com" type="button"><svg width="14" height="14"><use href="#i-copy"/></svg><span class="copy-btn-label">Kopírovat</span></button>
         </div>
-        <div class="contact-links">
-          <div class="contact-link">
-            <span class="ico">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
-            </span>
-            <span class="text">
-              <a class="value" href="mailto:tomikus.p@gmail.com">tomikus.p@gmail.com</a>
-              <small>E-mail</small>
-            </span>
-            <button class="copy-btn" data-copy="tomikus.p@gmail.com" type="button">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-              <span class="copy-btn-label">Kopírovat</span>
-            </button>
-          </div>
-          <div class="contact-link">
-            <span class="ico">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            </span>
-            <span class="text">
-              <a class="value" href="tel:+420604779519">+420 604 779 519</a>
-              <small>Telefon</small>
-            </span>
-            <button class="copy-btn" data-copy="+420 604 779 519" type="button">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-              <span class="copy-btn-label">Kopírovat</span>
-            </button>
-          </div>
+        <div class="c-row">
+          <span class="c-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></span>
+          <span class="c-text"><small>Telefon</small><a href="tel:+420604779519">+420 604 779 519</a></span>
+          <button class="copy-btn" data-copy="+420 604 779 519" type="button"><svg width="14" height="14"><use href="#i-copy"/></svg><span class="copy-btn-label">Kopírovat</span></button>
         </div>
+        <p class="contact-note">Konzultace je nezávazná. Odpovídám zpravidla do jednoho pracovního dne.</p>
       </div>
     </div>
   </section>
 
 </main>
 
-<footer>
-  <div class="wrap footer-inner">
-    <span class="brand">Odpovi.to</span>
-    <span>&copy; 2026 Pavel Tomášek. Všechna práva vyhrazena.</span>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="#top">
+          <span class="brand-mark"><svg><use href="#mark" color="#fff"/></svg></span>
+          <span>Odpovi<span class="dot">.</span>to</span>
+        </a>
+        <p>AI chatboti pro rezervace a zákaznickou podporu na webu i na Facebook Messengeru.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Služba</h4>
+        <ul>
+          <li><a href="#funkce">Funkce</a></li>
+          <li><a href="#postup">Jak to probíhá</a></li>
+          <li><a href="#bezpecnost">Bezpečnost</a></li>
+          <li><a href="#o-mne">O mně</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Právní</h4>
+        <ul>
+          <li><a href="privacy.html">Ochrana osobních údajů</a></li>
+          <li><a href="privacy-policy.html">Privacy Policy</a></li>
+          <li><a href="privacy.html#smazani">Smazání dat</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Kontakt</h4>
+        <ul>
+          <li><a href="mailto:tomikus.p@gmail.com">tomikus.p@gmail.com</a></li>
+          <li><a href="tel:+420604779519">+420 604 779 519</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; 2026 Pavel Tomášek. Všechna práva vyhrazena.</span>
+      <span class="mono">Odpovi.to</span>
+    </div>
   </div>
 </footer>
 
 <script>
-  // Tlačítko "Kopírovat" u e-mailu/telefonu — funguje bez ohledu na to,
-  // jestli má návštěvník na počítači nastavený výchozí e-mailový program
-  // (mailto:/tel: odkazy bez toho tiše nic neudělají).
+  /* Mobilní menu */
+  (function () {
+    var toggle = document.getElementById("navToggle");
+    var menu = document.getElementById("mobileMenu");
+    toggle.addEventListener("click", function () {
+      var open = menu.hidden;
+      menu.hidden = !open;
+      toggle.setAttribute("aria-expanded", String(open));
+    });
+    menu.querySelectorAll("a").forEach(function (a) {
+      a.addEventListener("click", function () { menu.hidden = true; toggle.setAttribute("aria-expanded", "false"); });
+    });
+  })();
+
+  /* Ukázková konverzace – přehraje se po načtení a na tlačítko "Přehrát znovu" */
+  (function () {
+    var thread = document.getElementById("thread");
+    var steps = Array.prototype.slice.call(thread.querySelectorAll("[data-step]"));
+    var pick = document.getElementById("pick");
+    var toast = document.getElementById("toast");
+    var replayBtn = document.getElementById("replay");
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var timers = [];
+
+    function showAll() {
+      steps.forEach(function (s) { s.classList.remove("is-hidden", "is-gone"); });
+      pick.classList.add("picked");
+      toast.classList.remove("is-hidden");
+    }
+
+    function clear() { timers.forEach(clearTimeout); timers = []; var t = thread.querySelector(".typing"); if (t) t.remove(); }
+
+    function play() {
+      clear();
+      if (reduce) { showAll(); return; }
+      steps.forEach(function (s) { s.classList.add("is-hidden", "is-gone"); });
+      pick.classList.remove("picked");
+      toast.classList.add("is-hidden");
+
+      var t = 400;
+      steps.forEach(function (s, i) {
+        var isBot = s.classList.contains("bot");
+        if (isBot && i > 0) {
+          timers.push(setTimeout(function () {
+            var typing = document.createElement("div");
+            typing.className = "typing";
+            typing.innerHTML = "<i></i><i></i><i></i>";
+            thread.appendChild(typing);
+          }, t));
+          t += 900;
+        }
+        timers.push(setTimeout(function () {
+          var typing = thread.querySelector(".typing");
+          if (typing) typing.remove();
+          s.classList.remove("is-gone");
+          requestAnimationFrame(function () { requestAnimationFrame(function () { s.classList.remove("is-hidden"); }); });
+          if (i === 3) pick.classList.add("picked");
+        }, t));
+        t += isBot ? 1100 : 800;
+      });
+      timers.push(setTimeout(function () { toast.classList.remove("is-hidden"); }, t + 200));
+    }
+
+    replayBtn.addEventListener("click", play);
+    play();
+  })();
+
+  /* Kopírování e-mailu a telefonu (funguje i bez nastaveného e-mailového programu) */
   document.querySelectorAll(".copy-btn").forEach(function (btn) {
     var label = btn.querySelector(".copy-btn-label");
     var defaultLabel = label.textContent;
-
     btn.addEventListener("click", function () {
       var text = btn.getAttribute("data-copy");
-
-      function showCopied() {
+      function done() {
         btn.classList.add("copied");
-        label.textContent = "Zkopírováno!";
-        setTimeout(function () {
-          btn.classList.remove("copied");
-          label.textContent = defaultLabel;
-        }, 1800);
+        label.textContent = "Zkopírováno";
+        setTimeout(function () { btn.classList.remove("copied"); label.textContent = defaultLabel; }, 1800);
       }
-
+      function fallback() {
+        var input = document.createElement("textarea");
+        input.value = text; input.style.position = "fixed"; input.style.opacity = "0";
+        document.body.appendChild(input); input.focus(); input.select();
+        try { document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(input); done();
+      }
       if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text).then(showCopied).catch(function () {
-          fallbackCopy(text, showCopied);
-        });
-      } else {
-        fallbackCopy(text, showCopied);
-      }
+        navigator.clipboard.writeText(text).then(done).catch(fallback);
+      } else { fallback(); }
     });
   });
-
-  function fallbackCopy(text, onDone) {
-    var input = document.createElement("textarea");
-    input.value = text;
-    input.style.position = "fixed";
-    input.style.opacity = "0";
-    document.body.appendChild(input);
-    input.focus();
-    input.select();
-    try {
-      document.execCommand("copy");
-    } catch (err) {
-      /* nic - v nejhorším případě se aspoň adresa dá vidět a opsat ručně */
-    }
-    document.body.removeChild(input);
-    onDone();
-  }
 </script>
 </body>
 </html>
